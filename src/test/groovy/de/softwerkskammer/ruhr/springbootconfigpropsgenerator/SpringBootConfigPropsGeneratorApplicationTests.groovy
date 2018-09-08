@@ -12,7 +12,6 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.test.context.junit4.SpringRunner
 import spock.lang.Specification
 
-@RunWith(SpringRunner)
 @SpringBootTest
 class SpringBootConfigPropsGeneratorApplicationTests extends Specification {
 
@@ -41,7 +40,7 @@ class SpringBootConfigPropsGeneratorApplicationTests extends Specification {
         when:
         def html = factory.convert(tableAsAsciiDoc, [:])
 
-        expect:
+        then:
         html == """
        <table class="tableblock frame-all grid-all stretch">
        <colgroup>
