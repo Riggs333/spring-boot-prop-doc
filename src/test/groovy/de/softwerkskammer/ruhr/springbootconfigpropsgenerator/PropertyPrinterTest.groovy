@@ -1,6 +1,7 @@
 package de.softwerkskammer.ruhr.springbootconfigpropsgenerator
 
 
+import org.springframework.boot.configurationmetadata.ConfigurationMetadataGroup
 import org.springframework.boot.configurationmetadata.ConfigurationMetadataProperty
 import spock.lang.Specification
 
@@ -12,53 +13,49 @@ class PropertyPrinterTest extends  Specification {
         printer = new Printer()
     }
 
-    def "empty repo generates empty message"() {
+    def "empty group generates empty message"() {
         given:
-        def metaDataProperties = []
+        def metadataGroup = new ConfigurationMetadataGroup("de.softwerkskammer")
 
         expect:
-        this.printer.generate(metaDataProperties) == 'no properties found'
+        this.printer.generateTableForGroup(metadataGroup) == 'no properties found'
 
     }
 
-    def "repo with one entry generates table line for that entry"() {
+    def "group with one entry generates table for that entry"() {
         given:
-        def metaDataProperties = [new ConfigurationMetadataProperty(name: "myTestProperty", type: "String", description: "It's" +
-                " a test!")]
+        def metaDatagroup = new ConfigurationMetadataGroup("de.softwerkskammer")
+        def property = new ConfigurationMetadataProperty(name: "myTestProperty", type: "String", description: "It's" +
+                " a test!", defaultValue: "Default Value!")
+        metaDatagroup.properties["myTestProperty"] = property
 
         expect:
-        printer.generate metaDataProperties contains "| myTestProperty | String | It's a test!"
+        printer.generateTableForGroup metaDatagroup contains "| de.softwerkskammer.myTestProperty | String | Default Value! | " +
+                "It's a test!"
     }
 
+    def "header row with data lines"() {
 
-    def "repo with two entries generates two table lines for that entries in alphabetical order"() {
         given:
         def property1 = new ConfigurationMetadataProperty(name: "myTestProperty", type: "String", description: "It's" +
                 " a test!")
         def property2 = new ConfigurationMetadataProperty(name: "myOtherProperty", type: "java.time.LocalDate", description:
-                "It's" +
-                        " a trap!")
+                "It's a trap!")
 
-        def metaDataProperties = [property1, property2]
-
-        expect:
-        printer.generate (metaDataProperties) ==
-                """
-                | myOtherProperty | java.time.LocalDate | It's a trap!
-                | myTestProperty | String | It's a test!
-                """.stripIndent().trim()
-    }
-
-    def "header row contains name, type and description"() {
+        def group = new ConfigurationMetadataGroup()
+        group.properties << [(property1.name):property1, (property2.name):property2]
 
         expect:
-        printer.generateTableAroundRows([]) ==
+        printer.generateTableForGroup(group) ==
                 """
                 [options="header"]
                 |=====
-                | name | type | description
+                | name | type | default value | description
+                | myOtherProperty | java.time.LocalDate |  | It's a trap!
+                | myTestProperty | String |  | It's a test!
                 |=====
                 """.stripIndent().trim()
     }
+
 
 }
