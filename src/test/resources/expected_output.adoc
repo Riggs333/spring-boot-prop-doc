@@ -1,0 +1,6 @@
+[options="header"]
+|=====
+| name | type | default value | description
+| myOtherProperty | java.time.LocalDate |  | It's a trap!
+| myTestProperty | String |  | It's a test!
+|=====

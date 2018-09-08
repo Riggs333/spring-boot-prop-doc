@@ -47,14 +47,7 @@ class PropertyPrinterTest extends  Specification {
 
         expect:
         printer.generateTableForGroup(group) ==
-                """
-                [options="header"]
-                |=====
-                | name | type | default value | description
-                | myOtherProperty | java.time.LocalDate |  | It's a trap!
-                | myTestProperty | String |  | It's a test!
-                |=====
-                """.stripIndent().trim()
+                this.class.getResource("/expected_output.adoc").text.stripIndent().trim()
     }
 
 

@@ -1,0 +1,11 @@
+# Spring Boot Prop Doc
+
+Automatically documents custom Spring Boot properties as AsciiDoc tables.
+
+[source]
+----
+include::src/test/resources/expected_output.adoc[]
+----
+
+
+include::src/test/resources/expected_output.adoc[]
